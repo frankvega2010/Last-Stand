@@ -13,9 +13,23 @@ public class Weapon : MonoBehaviour
     public GameObject bulletTemplate;
     public GameObject spawnPoint;
 
+    [Header("Model Settings")]
+    public Animator animator;
+    public GameObject weaponBarrelModel;
+    public float maxBarrelSpeed;
+    public float barrelFireTime;
+    public float barrelSpeedMultiplier;
+
+
+    private float barrelTorqueTimer;
+    private Rigidbody rig;
     private Bullet bullet;
     private float fireRateTimer;
     private bool canShoot;
+    private bool isShooting;
+    public bool doOnce;
+    public bool doOnce2;
+    public bool doOnce3;
 
     // Start is called before the first frame update
     void Start()
@@ -24,33 +38,85 @@ public class Weapon : MonoBehaviour
         bullet.damage = damage;
         bullet.speed = bulletSpeed;
         bullet.direction = transform.forward;
+
+        rig = weaponBarrelModel.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(canShoot)
+        if (Input.GetMouseButton(0))
         {
-            if(Input.GetMouseButton(0))
+            isShooting = true;
+        }
+        else
+        {
+            isShooting = false;
+        }
+
+        
+
+        if(isShooting)
+        {
+            doOnce2 = false;
+
+            barrelTorqueTimer += Time.deltaTime * barrelSpeedMultiplier;
+
+            if(barrelTorqueTimer >= maxBarrelSpeed)
             {
-                Shoot();
+                barrelTorqueTimer = maxBarrelSpeed;
+            }
+
+            if(barrelTorqueTimer >= barrelFireTime)
+            {
+                if (canShoot)
+                {
+                    Shoot();
+                    if(!doOnce)
+                    {
+                        animator.SetTrigger("Fire");
+                        doOnce = true;
+                    }
+                }
+                else
+                {
+                    fireRateTimer += Time.deltaTime;
+
+                    if (fireRateTimer >= fireRate)
+                    {
+                        canShoot = true;
+                        fireRateTimer = 0;
+                    }
+                }
             }
         }
         else
         {
-            fireRateTimer += Time.deltaTime;
+            doOnce = false;
 
-            if (fireRateTimer >= fireRate)
+            if(!doOnce2)
             {
-                canShoot = true;
-                fireRateTimer = 0;
+                animator.SetTrigger("EndFire");
+                doOnce2 = true;
+            }
+
+            barrelTorqueTimer -= Time.deltaTime * barrelSpeedMultiplier * 3;
+
+            if (barrelTorqueTimer <= 0)
+            {
+                barrelTorqueTimer = 0;
+                animator.SetTrigger("Idle");
             }
         }
-        
+
+
+        weaponBarrelModel.transform.localRotation *= Quaternion.Euler(new Vector3(0, 0, barrelTorqueTimer * Time.deltaTime));
+
     }
 
     public void Shoot()
     {
+        
         canShoot = false;
         bullet.damage = damage;
         bullet.speed = bulletSpeed;
@@ -59,13 +125,18 @@ public class Weapon : MonoBehaviour
         bulletObject.transform.rotation = transform.rotation;
         bulletObject.transform.position = spawnPoint.transform.position;
 
-        float xDispersion = Random.Range(-0.2f,0.2f);
-        float yDispersion = Random.Range(-0.2f, 0.2f);
+        Debug.Log("X " + bulletObject.transform.localPosition.x);
+        Debug.Log("Y " + bulletObject.transform.localPosition.y);
+        float xDispersion = Random.Range(-0.15f, 0.15f);
+        float yDispersion = Random.Range(-0.1f, 0.1f);
 
-        Vector3 dispersion = new Vector3(xDispersion, yDispersion, 0);
+        Vector3 dispersion = new Vector3(xDispersion, 0, 0);
 
         bulletObject.transform.position += dispersion;
 
         bulletObject.SetActive(true);
+        
+        //rig.AddRelativeTorque(new Vector3(0, 0, 10));
+        //rig.AddTorque(new Vector3(0,0,10));
     }
 }
