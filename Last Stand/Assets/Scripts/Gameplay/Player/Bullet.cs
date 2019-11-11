@@ -8,13 +8,18 @@ public class Bullet : MonoBehaviour
     public float speed;
     public int damage;
     public float lifespan;
+    public float shapeSizeTimeMultiplier;
 
+    private bool canChangeSize;
+    private float shapeSizeTimer;
     private float lifespanTimer;
-
+    private Vector3 originalScale;
     // Start is called before the first frame update
     private void Start()
     {
-        
+        canChangeSize = true;
+        originalScale = transform.localScale;
+        transform.localScale = new Vector3(0, 0, 0);
     }
 
     // Update is called once per frame
@@ -22,10 +27,29 @@ public class Bullet : MonoBehaviour
     {
         lifespanTimer += Time.deltaTime;
 
-        if(lifespanTimer >= lifespan)
+        if(canChangeSize)
+        {
+            shapeSizeTimer += Time.deltaTime * shapeSizeTimeMultiplier;
+        }
+
+        if (lifespanTimer >= lifespan)
         {
             Destroy(gameObject);
         }
+
+        if(canChangeSize)
+        {
+            if (shapeSizeTimer <= originalScale.x)
+            {
+                transform.localScale = new Vector3(lifespanTimer, lifespanTimer, lifespanTimer);
+            }
+            else
+            {
+                canChangeSize = false;
+                transform.localScale = originalScale;
+            }
+        }
+
 
         transform.position += direction * speed * Time.deltaTime;
     }
@@ -34,7 +58,9 @@ public class Bullet : MonoBehaviour
     {
         switch (collision.gameObject.tag)
         {
-            case "enemy":
+            case "stage":
+                Destroy(gameObject);
+                break;
             default:
                 break;
         }

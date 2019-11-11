@@ -44,9 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ae24e61de68c94c9b08f49be9783d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 63
+  direction: {x: 0.59471345, y: 0.019197492, z: 0.8037085}
+  speed: 81
   damage: 5
   lifespan: 5
+  shapeSizeTimeMultiplier: 13.17
 --- !u!1 &9200573891523200426
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,4 +158,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 3
+  m_CollisionDetection: 2

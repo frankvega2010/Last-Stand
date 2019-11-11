@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 5
-  bulletSpeed: 15
-  fireRate: 0.8
+  bulletSpeed: 81
+  fireRate: 0.09
   bulletTemplate: {fileID: 9200573891074466376, guid: 1608497e29425d940b84ba1d11ef809e,
     type: 3}
   spawnPoint: {fileID: 684259686769666803}

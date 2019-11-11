@@ -58,6 +58,14 @@ public class Weapon : MonoBehaviour
         GameObject bulletObject = Instantiate(bulletTemplate);
         bulletObject.transform.rotation = transform.rotation;
         bulletObject.transform.position = spawnPoint.transform.position;
+
+        float xDispersion = Random.Range(-0.2f,0.2f);
+        float yDispersion = Random.Range(-0.2f, 0.2f);
+
+        Vector3 dispersion = new Vector3(xDispersion, yDispersion, 0);
+
+        bulletObject.transform.position += dispersion;
+
         bulletObject.SetActive(true);
     }
 }
