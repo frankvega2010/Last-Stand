@@ -74,7 +74,7 @@ public class Weapon : MonoBehaviour
                     Shoot();
                     if(!doOnce)
                     {
-                        animator.SetTrigger("Fire");
+                        animator.SetBool("isFiring",true);
                         doOnce = true;
                     }
                 }
@@ -96,7 +96,7 @@ public class Weapon : MonoBehaviour
 
             if(!doOnce2)
             {
-                animator.SetTrigger("EndFire");
+                animator.SetBool("isFiring", false);
                 doOnce2 = true;
             }
 
@@ -127,8 +127,8 @@ public class Weapon : MonoBehaviour
 
         Debug.Log("X " + bulletObject.transform.localPosition.x);
         Debug.Log("Y " + bulletObject.transform.localPosition.y);
-        float xDispersion = Random.Range(-0.15f, 0.15f);
-        float yDispersion = Random.Range(-0.1f, 0.1f);
+        float xDispersion = Random.Range(-0.2f, 0.2f);
+        float yDispersion = Random.Range(-0.12f, 0.12f);
 
         Vector3 dispersion = new Vector3(xDispersion, 0, 0);
 
